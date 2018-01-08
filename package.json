@@ -1,5 +1,29 @@
 {
   "dependencies": {
     "http-server": "^0.10.0"
-  }
+  },
+  "name": "learn-webgl",
+  "description": "Test code, interview prep, and training.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kylegmaxwell/learn-webgl.git"
+  },
+  "keywords": [
+    "webgl",
+    "test",
+    "fbo"
+  ],
+  "author": "Kyle Maxwell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kylegmaxwell/learn-webgl/issues"
+  },
+  "homepage": "https://github.com/kylegmaxwell/learn-webgl#readme"
 }

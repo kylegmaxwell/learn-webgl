@@ -1,3 +1,43 @@
-<p>Hello</p>
-<a href = "learn_webgl.html">webgl link </a><br/>
-<a href = "jquery_test.html">jquery link </a>
+<html>
+<!-- Thank you to http://learningwebgl.com/blog/?page_id=1217 for the lessons upon which this code was built -->
+
+<head>
+<title>kmax WebGL</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<!-- Include libraries -->
+
+<script src="https://unpkg.com/gl-matrix@2.4.0/dist/gl-matrix.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous"></script>
+
+<!-- Vertex data and definition of cube object -->
+<script type="text/javascript" src="js/models.js"></script>
+
+<!-- defines "gl" object -->
+<script type="text/javascript" src="js/webgl_utils.js"></script>
+
+<!-- Shaders as global variables -->
+<script type="text/javascript" src="shaders/basic-vert.glsl.js"></script>
+<script type="text/javascript" src="shaders/basic-frag.glsl.js"></script>
+
+<!-- Main Program -->
+<script type="text/javascript" src="js/webgl_setup.js"></script>
+
+</head>
+
+<body onload="webGLStart();">
+    <p id="test"> test area </p>
+    <script type="text/javascript">
+        document.getElementById("test").innerHTML = "Testing Render To Texture with SSAO";
+    </script>
+    <input type="checkbox" id="useRtt" checked /> Use render to texture.<br>
+    Speed: <input type="text" id="speedInput" value="0.1" />
+    <p>
+        <canvas id="webgl-canvas" style="border: none;" width="512" height="512"></canvas>
+    </>
+</body>
+
+</html>
