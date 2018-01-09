@@ -46,7 +46,8 @@ float sampleDepth(vec2 uv, int i, int j) {
 vec3 sampleNormal(vec2 uv, int i, int j) {
     vec2 scale = vec2(uDx, uDy);
     vec3 n = texture2D(uSampler0, uv + scale * vec2(i, j)).xyz;
-    return n;
+    // Unscale the normal after packing into positive values
+    return 2.0*(-0.5+n);
 }
 
 vec3 samplePosition(vec2 uv, int i, int j) {
@@ -237,7 +238,8 @@ void main(void)
     }
 
     if (uOutputType==1) {// output normals
-        color = nColor;
+        // scale normal vector to pack it into positive values
+        color = nColor*0.5+0.5;
     }
 
     if (uOutputType==2) {// output depth

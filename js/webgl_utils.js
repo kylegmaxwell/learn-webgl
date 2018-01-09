@@ -1,7 +1,7 @@
 var gl;
 function initGL(canvas) {
     try {
-        gl = canvas.getContext("webgl");
+        gl = canvas.getContext("webgl2");
         gl.viewportWidth = canvas.width;
         gl.viewportHeight = canvas.height;
     } catch (e) {
@@ -188,10 +188,8 @@ function RenderToTexture (iSize) {
     this.size = iSize;
     this.frameBuffer = undefined;
     this.texture = undefined;
-    this.fpTextures = undefined;
 
     this.initFrameBuffer = function () {
-        this.fpTextures = gl.getExtension("OES_texture_float");
 
         // create frame buffer
         this.frameBuffer = gl.createFramebuffer();
@@ -202,29 +200,15 @@ function RenderToTexture (iSize) {
         // create empty texture target
         this.texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        if (this.fpTextures) {
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        }
-        else {
-            // TODO this could also differ on whether using float textures
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-        }
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
         // fill texture with empty pixels
 
-        if (this.fpTextures) {
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.frameBuffer.width, this.frameBuffer.height, 0, gl.RGBA, gl.FLOAT, null);
-        }
-        else {
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.frameBuffer.width, this.frameBuffer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-            console.error("OES_texture_floats extension not supported.");
-            gl.generateMipmap(gl.TEXTURE_2D);
-        }
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.frameBuffer.width, this.frameBuffer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
         // create render buffer for depth
         var renderbuffer = gl.createRenderbuffer();
@@ -235,6 +219,8 @@ function RenderToTexture (iSize) {
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
         gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderbuffer);
 
+        var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+        console.log("STATUS " + status + " =? " + gl.FRAMEBUFFER_COMPLETE );
         // clear
         gl.bindTexture(gl.TEXTURE_2D, null);
         gl.bindRenderbuffer(gl.RENDERBUFFER, null);
@@ -251,9 +237,5 @@ function RenderToTexture (iSize) {
 
     this.bindTexture = function () {
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        // must re-generate mip map each frame since frame buffer render creates a new texture
-        if(!this.fpTextures) {
-            gl.generateMipmap(gl.TEXTURE_2D);
-        }
     }
 }
